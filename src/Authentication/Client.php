@@ -3,16 +3,11 @@ namespace SiASN\Sdk\Authentication;
 
 use SiASN\Sdk\Credentials\Credentials;
 use SiASN\Sdk\Core\Cache;
+use SiASN\Sdk\Core\BaseUrl;
 use GuzzleHttp\Client as HttpClient;
 
 final class Client
 {
-    const WS_AUTH_PRODUCTION = "https://apimws.bkn.go.id/oauth2/token";
-    const WS_AUTH_TRAINING   = "https://training-apimws.bkn.go.id/oauth2/token";
-
-    const SSO_AUTH_PRODUCTION = "https://sso-siasn.bkn.go.id/auth/realms/public-siasn/protocol/openid-connect/token";
-    const SSO_AUTH_TRAINING   = "https://iam-siasn.bkn.go.id/auth/realms/public-siasn/protocol/openid-connect/token";
-
     private $credentials;
     private $cache;
 
@@ -50,7 +45,7 @@ final class Client
 
         try {
             $http     = new HttpClient();
-            $response = $http->post(($this->credentials->isProduction()) ? Client::WS_AUTH_PRODUCTION : Client::WS_AUTH_TRAINING, 
+            $response = $http->post(($this->credentials->isProduction()) ? BaseUrl::WS_AUTH_PRODUCTION : BaseUrl::WS_AUTH_TRAINING, 
                 [
                     'auth' => [$this->credentials->getConsumerKey(), $this->credentials->getConsumerSecret()],
                     'headers' => [
@@ -75,7 +70,7 @@ final class Client
 
         try {
             $http     = new HttpClient();
-            $response = $http->post(($this->credentials->isProduction()) ? Client::SSO_AUTH_PRODUCTION : Client::SSO_AUTH_TRAINING, 
+            $response = $http->post(($this->credentials->isProduction()) ? BaseUrl::SSO_AUTH_PRODUCTION : BaseUrl::SSO_AUTH_TRAINING, 
                 [
                     'headers' => [
                         'Content-Type' => 'application/x-www-form-urlencoded',
@@ -101,10 +96,12 @@ final class Client
 
     public function storeSso($response)
     {
-        $this->cache->store($this->cacheTokenSsoName(),[
-            "access_token"  => $response['access_token'],
-            "refresh_token" => $response['refresh_token']
-        ], time() + $response['expires_in']);
+        $this->cache->store($this->cacheTokenSsoName(), $response['access_token'], time() + $response['expires_in']);
+    }
+
+    public function isProduction()
+    {
+        return $this->credentials->isProduction();
     }
 
     private function cacheTokenWsName()
