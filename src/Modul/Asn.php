@@ -32,9 +32,83 @@ final class Asn
                     ]
                 ],
             );
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (\Exception $e) {
-            return $e->getMessage();
+            $response = json_decode($response->getBody()->getContents(), true);
+            return $response['data'];
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $message = json_decode($e->getResponse()->getBody()->getContents());
+            return $message->data;
+        }
+    }
+
+    public function dataPasangan($param)
+    {
+        try {
+            $http     = new HttpClient();
+            $response = $http->get($this->baseUrl("pns/data-pasangan/{$param}"), 
+                [
+                    'headers' => [
+                        'accept'        => 'application/json',
+                        'Auth'          => "bearer " . $this->client->getSsoAccessToken(),
+                        'Authorization' => "Bearer " . $this->client->getWsAccessToken()
+                    ],
+                    'form_params' => [
+                        'grant_type' => 'client_credentials'
+                    ]
+                ],
+            );
+            $response = json_decode($response->getBody()->getContents(), true);
+            return $response['data'];
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $message = json_decode($e->getResponse()->getBody()->getContents());
+            return $message->data;
+        }
+    }
+
+    public function dataOrangTua($param)
+    {
+        try {
+            $http     = new HttpClient();
+            $response = $http->get($this->baseUrl("pns/data-ortu/{$param}"), 
+                [
+                    'headers' => [
+                        'accept'        => 'application/json',
+                        'Auth'          => "bearer " . $this->client->getSsoAccessToken(),
+                        'Authorization' => "Bearer " . $this->client->getWsAccessToken()
+                    ],
+                    'form_params' => [
+                        'grant_type' => 'client_credentials'
+                    ]
+                ],
+            );
+            $response = json_decode($response->getBody()->getContents(), true);
+            return $response['data'];
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $message = json_decode($e->getResponse()->getBody()->getContents());
+            return $message->data;
+        }
+    }
+
+    public function dataAnak($param)
+    {
+        try {
+            $http     = new HttpClient();
+            $response = $http->get($this->baseUrl("pns/data-anak/{$param}"), 
+                [
+                    'headers' => [
+                        'accept'        => 'application/json',
+                        'Auth'          => "bearer " . $this->client->getSsoAccessToken(),
+                        'Authorization' => "Bearer " . $this->client->getWsAccessToken()
+                    ],
+                    'form_params' => [
+                        'grant_type' => 'client_credentials'
+                    ]
+                ],
+            );
+            $response = json_decode($response->getBody()->getContents(), true);
+            return $response['data'];
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $message = json_decode($e->getResponse()->getBody()->getContents());
+            return $message->data;
         }
     }
 
