@@ -1,0 +1,22 @@
+{
+    "name": "egysatria/sdk-siasn-php",
+    "description": "SDK PHP Integrasi Web Service SiASN",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "egysatria",
+            "email": "satriah0512@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "guzzlehttp/guzzle": "^7.5"
+    },
+    "autoload": {
+        "files": ["src/functions.php"],
+        "psr-4": {
+            "SiASN\\Sdk\\": "src/"
+        }
+    }
+}
